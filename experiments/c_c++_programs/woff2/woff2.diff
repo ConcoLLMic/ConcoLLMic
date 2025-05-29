@@ -1,0 +1,54 @@
+diff --git a/src/file.h b/src/file.h
+index 70ea7a7..30f8ae2 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -9,22 +9,38 @@
+ #ifndef WOFF2_FILE_H_
+ #define WOFF2_FILE_H_
+ 
+-#include <fstream>
+-#include <iterator>
++#include <cstdio>
++#include <string>
+ 
+ namespace woff2 {
+ 
+-inline std::string GetFileContent(std::string filename) {
+-  std::ifstream ifs(filename.c_str(), std::ios::binary);
+-  return std::string(std::istreambuf_iterator<char>(ifs.rdbuf()),
+-                     std::istreambuf_iterator<char>());
++/**
++ * Reads _all_ bytes from stdin into a std::string.
++ * Under KLEE, use --sym-stdin=<max_size> so that stdin produces
++ * exactly that many symbolic bytes (and then EOF).
++ */
++inline std::string GetFileContent(const std::string& /*filename*/) {
++    std::string content;
++    // Read until EOF
++    int c;
++    while ((c = std::fgetc(stdin)) != EOF) {
++        content.push_back(static_cast<char>(c));
++    }
++    return content;
+ }
+ 
+-inline void SetFileContents(std::string filename, std::string::iterator start,
+-                            std::string::iterator end) {
+-  std::ofstream ofs(filename.c_str(), std::ios::binary);
+-  std::copy(start, end, std::ostream_iterator<char>(ofs));
++/**
++ * Writes the given byte‐range to stdout. Under KLEE this simply
++ * drains your symbolic buffer out—no real file I/O.
++ */
++inline void SetFileContents(const std::string& /*filename*/,
++                            std::string::const_iterator start,
++                            std::string::const_iterator end) {
++    for (auto it = start; it != end; ++it) {
++        std::fputc(static_cast<unsigned char>(*it), stdout);
++    }
+ }
+ 
+-} // namespace woff2
++}  // namespace woff2
++
+ #endif  // WOFF2_FILE_H_

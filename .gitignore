@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.dSYM
+experiments/*/*/results
+.vscode/
+logs/
+out/
+*/*.out
+*/*.log
+*/*/*.gcov
+*/*/*.gcda
+*/*/*.gcno
+*/*/*.o
+coverage.csv
+.DS_Store
