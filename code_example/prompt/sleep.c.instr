@@ -1,0 +1,72 @@
+#include <stdio.h>
+
+int multiplier;
+
+static bool
+apply_suffix (double *x, char suffix_char)
+{
+  switch (suffix_char)
+  {
+    case 0:
+    case 's':
+      fprintf(stderr, "enter apply_suffix 1\n");
+      multiplier = 1;
+      break;
+      // fprintf(stderr, "exit apply_suffix 1\n");   // Note: instrument "exit" line AFTER the basic block and comment out the "exit" line
+    default:
+      fprintf(stderr, "enter apply_suffix 2\n");
+      return false;
+      // fprintf(stderr, "exit apply_suffix 2\n");
+  }
+  fprintf(stderr, "enter apply_suffix 3\n");  // Add new basic block after the switch statement
+  *x *= multiplier;
+  return true;
+  // fprintf(stderr, "exit apply_suffix 3\n");
+}
+
+int
+main (int argc, char **argv)
+{
+  fprintf(stderr, "enter main 1\n");
+  double seconds = 0.0;
+  bool ok = true;
+  // fprintf(stderr, "exit main 1\n");
+
+  for (int i = optind; i < argc; i++)
+  {
+    fprintf(stderr, "enter main 2\n");
+    double s;
+    char const *p;
+    // fprintf(stderr, "exit main 2\n");
+    if (! (xstrtod (argv[i], &p, &s, cl_strtod) || errno == ERANGE)
+        /* Nonnegative interval.  */
+        || ! (0 <= s)
+        /* No extra chars after the number and an optional s,m,h,d char.  */
+        || (*p && *(p + 1))
+        /* Check any suffix char and update S based on the suffix.  */
+        || ! apply_suffix (&s, *p))
+    {
+      fprintf(stderr, "enter main 3\n");
+      fprintf(stderr, "error: invalid time interval %s\n", argv[i]);
+      ok = false;
+      // fprintf(stderr, "exit main 3\n");
+    }
+
+    fprintf(stderr, "enter main 4\n");
+    seconds += s;
+    // fprintf(stderr, "exit main 4\n");
+  }
+
+  if (!ok)
+  {
+    fprintf(stderr, "enter main 5\n");  // IMPORTANT: simple branch condition SHOULD ALSO BE instrumented
+    exit(1);
+    // fprintf(stderr, "exit main 5\n");
+  }
+
+  fprintf(stderr, "enter main 6\n");
+  xnanosleep (seconds);
+
+  return EXIT_SUCCESS;
+  // fprintf(stderr, "exit main 6\n");
+}
