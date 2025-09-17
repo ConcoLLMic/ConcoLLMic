@@ -2,7 +2,7 @@
 
 ## Overview
 
-ConcoLLMic is an LLM agent that performs concolic (*conc*rete + symb*olic*) testing. It can generate test cases for *any* environment and language (even *polyglot* systems)! 
+[ConcoLLMic](https://concollmic.github.io/) is an LLM agent that performs concolic (*conc*rete + symb*olic*) testing. It can generate test cases for *any* environment and language (even *polyglot* systems)! 
 
 In our testing on C/C++ programs, ~4h run of ConcoLLMic covers **230+%** and **80+%** more branches on average than [KLEE](https://klee-se.org) and [AFL++](https://aflplus.plus) in 48 hours, respectively. 
 
@@ -46,7 +46,7 @@ The number of representable FP values in the range must be ≤ 20.
 ```
 
 
-## Setup & Running
+## Quick Start
 
 You can run ConcoLLMic from a single entry point:
 
@@ -60,7 +60,7 @@ It supports three main use cases:
 * (3) `replay` and examine the generated tests (e.g. for coverage).
 
 There are also different utilility functions for reporting statstics. 
-For all supported commands and options, see [here](app/README.md).
+For all supported commands and options, see the documentation on our [website](https://concollmic.github.io/docs.html).
 
 **Step 0.** Set up the Python environment by running:
 ```bash
