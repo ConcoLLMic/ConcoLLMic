@@ -1,5 +1,7 @@
 # ConcoLLMic: Agentic Concolic Execution
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![License: Commercial](https://img.shields.io/badge/License-Commercial-green.svg)](LICENSE)
+
 ## Overview
 
 [ConcoLLMic](https://concollmic.github.io/) is an LLM agent that performs concolic (*conc*rete + symb*olic*) testing. It can generate test cases for *any* environment and language (even *polyglot* systems)! 
@@ -125,4 +127,17 @@ This will generate a summary at `coverage.csv` and the detailed coverage at `./c
 
 To reproduce results in our paper or to run real-world projects, see the [experiments](experiments/README.md) for more details.
 
+## License
+
+This project is dual licensed:
+
+- **Non-commercial use**: Licensed under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html) for academic and non-commercial purposes
+- **Commercial use**: Please contact the authors for commercial licensing
+
+For full license details, see [LICENSE](LICENSE).
+
+For commercial licensing inquiries, contact:
+- Abhik Roychoudhury (abhik@nus.edu.sg)
+- Cristian Cadar (c.cadar@imperial.ac.uk) 
+- Jonathan Tan (jonathan_tan@nus.edu.sg)
 
