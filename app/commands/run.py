@@ -938,7 +938,7 @@ def setup_run_parser(parser):
         type=str,
         help="test case selection method",
         required=False,
-        default=TestCaseSelection.RANDOM,
+        default=TestCaseSelection.DFS,
         choices=[e.value for e in TestCaseSelection],
     )
     run_parser.add_argument(
