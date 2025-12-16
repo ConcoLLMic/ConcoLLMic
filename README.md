@@ -64,7 +64,7 @@ The number of representable FP values in the range must be ≤ 20.
 ### Prerequisites
 
 - Python 3.10 or higher
-- API key for Claude-3.7-Sonnet (from Anthropic)
+- API key for Claude Sonnet (from Anthropic)
 
 ### Installation
 
@@ -85,7 +85,7 @@ pip install -r requirements-dev.txt
 export ANTHROPIC_API_KEY="your_api_key_here"
 ```
 
-By default, ConcoLLMic uses Claude-3.7-Sonnet. You can configure other models in [`ACE.py`](ACE.py) (see `setup_model()`).
+By default, ConcoLLMic uses Claude 4.5 Sonnet. You can configure other models in [`ACE.py`](ACE.py) (see `setup_model()`).
 
 ### Running Your First Example
 

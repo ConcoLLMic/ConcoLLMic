@@ -32,7 +32,7 @@ class AnthropicModel(Model):
 
     _instances = {}
 
-    def __new__(cls):
+    def __new__(cls, *args, **kwargs):
         if cls not in cls._instances:
             cls._instances[cls] = super().__new__(cls)
             cls._instances[cls]._initialized = False
@@ -110,7 +110,17 @@ class AnthropicModel(Model):
                     tools=tools,
                     **kwargs,
                 )
-
+            elif self.name == "claude-sonnet-4-5-20250929":
+                # Claude 4.5 does not allow both temperature and top_p to be specified
+                response = litellm.completion(
+                    model=self.name,
+                    messages=messages,
+                    temperature=temperature,
+                    max_tokens=self.max_output_token,
+                    stream=False,
+                    tools=tools,
+                    **kwargs,
+                )
             else:
                 response = litellm.completion(
                     model=self.name,
@@ -252,3 +262,15 @@ class Claude3_7Sonnet_128k(AnthropicModel):
             max_output_token=128000,
         )
         self.note = "Most intelligent model from Antropic with 128k output token limit"
+
+
+class Claude4_5Sonnet(AnthropicModel):
+    def __init__(self, max_output_token: int = 8192):
+        super().__init__(
+            "claude-sonnet-4-5-20250929",
+            0.000003,
+            0.000015,
+            parallel_tool_call=True,
+            max_output_token=max_output_token,
+        )
+        self.note = "Latest and most intelligent model from Anthropic (Claude 4.5) with (maximum) 64k output token limit"

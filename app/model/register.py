@@ -25,6 +25,7 @@ def register_all_models() -> None:
     common.register_model(claude.Claude3_5Sonnet())
     common.register_model(claude.Claude3_7Sonnet())
     common.register_model(claude.Claude3_7Sonnet_128k())
+    common.register_model(claude.Claude4_5Sonnet())
 
     # register default model as selected
-    common.SELECTED_MODEL = claude.Claude3_7Sonnet()
+    common.SELECTED_MODEL = claude.Claude4_5Sonnet()

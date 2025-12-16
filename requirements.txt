@@ -1,8 +1,8 @@
 loguru==0.7.3
 rich==13.9.4
-openai==1.68.2
+openai==2.9.0
 tenacity==8.2.3
-litellm==1.69.1
+litellm==1.80.8
 httpx[socks]==0.27.2
 pre-commit==3.6.0
 pydantic-core==2.27.2
@@ -14,5 +14,5 @@ pandas
 pyyaml==6.0.2
 ruamel.yaml==0.18.10
 dill==0.3.9
-anthropic==0.51.0
+anthropic==0.75.0
 transformers==4.37.2

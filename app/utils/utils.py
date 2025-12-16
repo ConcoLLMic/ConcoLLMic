@@ -1141,7 +1141,7 @@ def detected_crash(stderr: str, returncode: int) -> tuple[bool, str]:
 
 
 def estimate_text_token(
-    text: str | None, model: str = "claude-3-7-sonnet-20250219"
+    text: str | None, model: str = "claude-sonnet-4-5-20250929"
 ) -> int:
     """
     Estimate the number of tokens in a text.

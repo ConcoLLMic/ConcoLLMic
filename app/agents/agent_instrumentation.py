@@ -390,7 +390,7 @@ class InstrumentationAgent:
     # retry times for instrumentation to pass the `check_instrumentation`
     INSTRUMENTATION_RETRY_TIMES = 3
 
-    def __init__(self, model=claude.Claude3_7Sonnet_128k()):
+    def __init__(self, model=claude.Claude4_5Sonnet(max_output_token=32768)):
         self.model = model
         self.model.setup()
 

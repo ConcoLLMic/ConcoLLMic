@@ -148,7 +148,7 @@ def signal_handler(signum, frame, log_file_path: str):
 def setup_model():
     """Setup and initialize model"""
     register_all_models()
-    set_model("claude-3-7-sonnet-20250219")
+    set_model("claude-sonnet-4-5-20250929")
 
 
 def initialize_settings(log_dir: str = LOG_DIR):
@@ -186,7 +186,9 @@ def initialize_settings(log_dir: str = LOG_DIR):
 
 def parse_arguments():
     """Parse command line arguments"""
-    parser = argparse.ArgumentParser(description="ConcoLLMic - Agentic Concolic Execution")
+    parser = argparse.ArgumentParser(
+        description="ConcoLLMic - Agentic Concolic Execution"
+    )
 
     # Create subparsers for commands
     subparsers = parser.add_subparsers(dest="command", help="command to execute")
