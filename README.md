@@ -77,7 +77,7 @@ cd ConcoLLMic
 2. **Install Python dependencies**
 ```bash
 pip install -r requirements.txt
-pip install -r requirements-dev.txt
+pip install -r requirements-dev.txt # optional
 ```
 
 3. **Set up your API key**
@@ -89,13 +89,107 @@ By default, ConcoLLMic uses Claude 4.5 Sonnet. You can configure other models in
 
 ### Running Your First Example
 
-Let's walk through a complete example using a C program from [FP-Bench](https://github.com/zhaohuanqdcn/fp-bench) that counts floating-point values in a range.
+ConcoLLMic's workflow consists of two main steps: **instrumentation & compilation** and **concolic execution**. Below are two examples to get started:
 
-#### Step 1: Instrumentation
+<details>
+<summary><b>Example 1: Bracket Matching Validation</b></summary>
 
-ConcoLLMic instruments source code by inserting trace statements. For the provided examples, instrumented code is already available in [`code_example/instr/`](code_example/instr/).
+<br>
+
+A simple bracket matching validation program that checks if brackets are balanced.
+
+**Step 1: Instrumentation & Compilation**
+
+Instrumented code is *already available* in [`code_example/instr/validate_brackets.cpp`](code_example/instr/validate_brackets.cpp). 
 
 To instrument from scratch:
+
+```bash
+rm ./code_example/instr/validate_brackets.cpp
+
+python3 ACE.py instrument \
+    --src_dir ./code_example/src/ \
+    --out_dir ./code_example/instr/ \
+    --instr_languages c,cpp,python,java
+```
+
+**Note**: The `--instr_languages` flag is only used for filtering files by extension. No additional language-specific support is needed.
+
+Compile the instrumented code normally:
+
+```bash
+g++ -o ./code_example/instr/validate_brackets ./code_example/instr/validate_brackets.cpp
+```
+
+**Step 2: Concolic Execution**
+
+Run the concolic execution agent with the provided test harness [`code_example/harness/validate_brackets.py`](code_example/harness/validate_brackets.py), which is a Python function that prepares program input and executes the program:
+
+```bash
+python3 ACE.py run \
+    --project_dir ./code_example/instr/ \
+    --execution ./code_example/harness/validate_brackets.py \
+    --out ./out/ \
+    --rounds 2 \
+    --parallel_num 3
+```
+
+*Command Parameters Explained*:
+
+- `--project_dir`: Directory containing the instrumented code and the compiled program
+- `--execution`: Test harness (a Python script that executes the target program and returns stderr + exit code)
+- `--out`: Output directory for generated test cases and logs
+- `--rounds`: Number of concolic execution rounds (default: unlimited until coverage plateau)
+- `--parallel_num`: Maximum number of concurrent test case generations per round
+
+*Output*:
+- `./out/ConcoLLMic_*.log` — detailed execution log
+- `./out/queue/id:*.yaml` — generated test cases with metadata
+
+**Step 3: View Statistics (Optional)**
+
+Analyze testing statistics (tokens used, costs):
+
+```bash
+python3 ACE.py run_data --out_dir ./out/
+```
+
+**Step 4: Replay & Measure Coverage (Optional)**
+
+```bash
+# Compile with coverage
+cd ./code_example/src/
+g++ --coverage -o validate_brackets validate_brackets.cpp
+lcov -z -d .
+cd ../../
+
+# Replay test cases
+python3 ACE.py replay \
+    ./out/ \
+    ./code_example/src/ \
+    ./coverage.csv \
+    --cov_script ./code_example/src/coverage.sh
+```
+
+*Output*:
+- `./coverage.csv` — time-series coverage data for each test case
+- `./code_example/src/validate_brackets.cpp.gcov` — line-by-line coverage report
+
+</details>
+
+<details>
+<summary><b>Example 2: Floating-Point Counting</b></summary>
+
+<br>
+
+A program from [FP-Bench](https://github.com/zhaohuanqdcn/fp-bench) that counts representable floating-point values in a range.
+
+**Step 1: Instrumentation & Compilation**
+
+Instrumented code is *already available* in [`code_example/instr/count.c`](code_example/instr/count.c). 
+
+To instrument from scratch:
+
 ```bash
 rm ./code_example/instr/count.c
 
@@ -107,16 +201,16 @@ python3 ACE.py instrument \
 
 **Note**: The `--instr_languages` flag is only used for filtering files by extension. No additional language-specific support is needed.
 
-#### Step 2: Compilation
-
 Compile the instrumented code normally:
+
 ```bash
 gcc -o ./code_example/instr/count ./code_example/instr/count.c
 ```
 
-#### Step 3: Concolic Execution
+**Step 2: Concolic Execution**
 
-Run the concolic execution agent with a test harness ([`code_example/harness/count.py`](code_example/harness/count.py)):
+Run the concolic execution agent with the provided test harness [`code_example/harness/count.py`](code_example/harness/count.py), which is a Python function that prepares program input and executes the program:
+
 ```bash
 python3 ACE.py run \
     --project_dir ./code_example/instr/ \
@@ -126,40 +220,39 @@ python3 ACE.py run \
     --parallel_num 3
 ```
 
-**Parameters**:
+*Command Parameters Explained*:
+
 - `--project_dir`: Directory containing the instrumented code and the compiled program
 - `--execution`: Test harness (a Python script that executes the target program and returns stderr + exit code)
 - `--out`: Output directory for generated test cases and logs
 - `--rounds`: Number of concolic execution rounds (default: unlimited until coverage plateau)
 - `--parallel_num`: Maximum number of concurrent test case generations per round
 
-**Expected cost**: ~$0.40 for 2 rounds with Claude-3.7-Sonnet
-
-**Output**:
+*Output*:
 - `./out/ConcoLLMic_*.log` — detailed execution log
 - `./out/queue/id:*.yaml` — generated test cases with metadata
 
-#### Step 4: View Statistics (Optional)
+**Expected cost**: ~$0.40 for 2 rounds with Claude-3.7-Sonnet
+
+
+**Step 3: View Statistics (Optional)**
 
 Analyze testing statistics (tokens used, costs):
+
 ```bash
 python3 ACE.py run_data --out_dir ./out/
 ```
 
-#### Step 5: Replay & Coverage (Optional)
+**Step 4: Replay & Measure Coverage (Optional)**
 
-To measure code coverage or verify bugs:
-
-1. **Compile the original (non-instrumented) code with coverage**:
 ```bash
+# Compile with coverage
 cd ./code_example/src/
 gcc --coverage -o count count.c
 lcov -z -d .
 cd ../../
-```
 
-2. **Replay generated test cases**:
-```bash
+# Replay test cases
 python3 ACE.py replay \
     ./out/ \
     ./code_example/src/ \
@@ -172,6 +265,8 @@ python3 ACE.py replay \
 - `./code_example/src/count.c.gcov` — line-by-line coverage report
 
 The `gcov` report will show that the bug at line 67 has been triggered.
+
+</details>
 
 ---
 

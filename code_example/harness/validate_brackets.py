@@ -11,7 +11,7 @@ def execute_program(timeout: int) -> tuple[str, int]:
 
         try:
             result = subprocess.run(
-                ["./check", temp_file_path],
+                ["./validate_brackets", temp_file_path],
                 capture_output=True,
                 encoding="utf-8",
                 errors="replace",
