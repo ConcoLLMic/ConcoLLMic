@@ -604,7 +604,7 @@ def summarize(
                 )
 
         logger.info(
-            "Summarizer agent response: \n{}",
+            "Summarizer agent response content (being empty is normal when the model calls tools): \n{}",
             response_content,
         )
 

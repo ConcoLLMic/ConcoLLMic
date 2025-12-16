@@ -159,7 +159,10 @@ class TestCaseScheduler:
             update_usage_details(usage_details, last_call, get_usage_input_part(usage))
             last_call = []
 
-            logger.info("Scheduling agent response: \n{}", response_content)
+            logger.info(
+                "Scheduling agent response content (being empty is normal when the model calls tools): \n{}",
+                response_content,
+            )
 
             # Add model's response to the message thread
             msg_thread.add_model(response_content, response_tool_calls)
