@@ -89,7 +89,7 @@ Only if your solution is mathematically correct with respect to the given constr
 Use the `{ReviewSolveAnswerTool["function"]["name"]}` tool to provide your review answer.
 """
 
-CONSTRAINT_SOLVING_TEMPERATURE = 0.5
+CONSTRAINT_SOLVING_TEMPERATURE = 0.0
 
 
 def solve(

@@ -67,7 +67,7 @@ Traditional concolic execution typically selects the most recently generated tes
 Evaluate each test case against the above criteria before making your final selection. Remember that the goal is to maximize code coverage and explore diverse program behaviors by systematically generating test cases that follow different execution paths.
 """
 
-SCHEDULING_TEMPERATURE = 0.5
+SCHEDULING_TEMPERATURE = 0.0
 
 
 class TestCaseScheduler:

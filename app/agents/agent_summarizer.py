@@ -218,7 +218,7 @@ Use the `{ReviewSummaryAnswerTool["function"]["name"]}` tool to provide your ass
 """
 
 
-CONSTRAINT_SUMMARY_TEMPERATURE = 0.5
+CONSTRAINT_SUMMARY_TEMPERATURE = 0.0
 
 
 def _process_single_tool_call_for_summary(
