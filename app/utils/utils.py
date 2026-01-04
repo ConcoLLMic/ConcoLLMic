@@ -979,16 +979,19 @@ def detected_crash(stderr: str, returncode: int) -> tuple[bool, str]:
         str: Crash reason
     """
     reason = None
-    returncode = -returncode
-    # Check if the process was terminated by a signal
-    if os.WIFSIGNALED(returncode):
-        if os.WCOREDUMP(returncode):
-            reason = "Segmentation fault"
-        else:
-            signal_num = os.WTERMSIG(returncode)
-            if signal_num not in [signal.SIGKILL]:
-                signal_name = signal.Signals(signal_num).name
-                reason = f"Terminated by signal {signal_num} ({signal_name})"
+    signal_num = None
+    if returncode < 0:
+        signal_num = -returncode
+    elif returncode >= 128:
+        signal_num = returncode - 128
+
+    if signal_num is not None and signal_num not in [signal.SIGKILL]:
+        try:
+            signal_name = signal.Signals(signal_num).name
+            reason = f"Terminated by signal {signal_num} ({signal_name})"
+        except ValueError:
+            # Unknown signal number, use generic message
+            reason = f"Terminated by signal {signal_num}"
 
     if reason is not None:
         return True, reason
