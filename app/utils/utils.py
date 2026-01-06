@@ -331,7 +331,16 @@ def exec_code_function(
             result = parent_conn.recv()
         else:
             raise RuntimeError("Child process exited without sending any data")
-
+    except EOFError:
+        # Child process terminated abnormally without sending result through pipe.
+        # Possible causes: killed by signal, C extension crash, os._exit() called, etc.
+        raise TargetExecutionError(
+            RuntimeError(
+                f"Child process terminated abnormally (exit code: {process.exitcode}) "
+                "without sending result through pipe."
+            ),
+            func_name,
+        )
     finally:
         # Ensure the pipe connection is closed from the parent side
         parent_conn.close()
