@@ -8,10 +8,10 @@ This directory contains Docker-based setups for reproducing the evaluation resul
 
 ```bash
 # Auto-navigate to root and initialize
-cd $(git rev-parse --show-toplevel) && git submodule update --init --recursive
+cd $(git rev-parse --show-toplevel) && git submodule update --init --recursive --remote
 ```
 
-This will clone the experiment artifacts from the [ConcoLLMic-artifact](https://github.com/ConcoLLMic/ConcoLLMic-artifact) repository into `experiments/benchmarks/`.
+This will clone the latest experiment artifacts from the [ConcoLLMic-artifact](https://github.com/ConcoLLMic/ConcoLLMic-artifact) repository into `experiments/benchmarks/`. The `--remote` flag always tracks the `main` branch of the artifact repository instead of the commit recorded in this repository, so you get the latest benchmarks.
 
 ## Benchmark Categories
 
